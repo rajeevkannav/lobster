@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory(:warehouse) do
-    name { Faker::Lorem.word }
+    name { Faker::Address.city }
   end
 end
 
