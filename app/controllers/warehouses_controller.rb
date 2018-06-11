@@ -1,6 +1,8 @@
 class WarehousesController < ApplicationController
 
-  before_action :set_warehouse, only: [:show, :update, :destroy]
+  before_action :set_warehouse, except: [:index, :create]
+  before_action :set_stockpile, only: [:activity, :adjustments]
+  before_action :set_warehouse_to, only: [:adjustments]
 
   def index
     @warehouses = Warehouse.all
@@ -23,7 +25,24 @@ class WarehousesController < ApplicationController
 
   def destroy
     @warehouse.destroy
-    head :no_content
+    head :ok
+  end
+
+  def activity
+    @stockpile.do_account(kind: warehouse_activity_params[:kind], quantity: warehouse_activity_params[:quantity])
+    head :ok
+  end
+
+  def adjustments
+     @to_warehouse_stockpile = @to_warehouse.stockpiles.find_or_create_by(product_id: warehouse_adjustments_params[:product_id])
+     Stockpile.transaction do
+       @stockpile.do_account(kind: 'remove', quantity: warehouse_adjustments_params[:quantity])
+       @to_warehouse_stockpile.do_account(kind: 'add', quantity: warehouse_adjustments_params[:quantity])
+     end
+     head :ok
+  end
+
+  def reports
   end
 
   private
@@ -34,6 +53,22 @@ class WarehousesController < ApplicationController
 
   def set_warehouse
     @warehouse = Warehouse.find params[:id]
+  end
+
+  def set_warehouse_to
+    @to_warehouse = Warehouse.find params[:to_warehouse_id]
+  end
+
+  def warehouse_activity_params
+    params.permit(:product_id,  :kind, :quantity)
+  end
+
+  def warehouse_adjustments_params
+    params.permit(:to_warehouse_id , :product_id, :quantity)
+  end
+
+  def set_stockpile
+    @stockpile = @warehouse.stockpiles.find_or_create_by(product_id: params[:product_id])
   end
 
 end

@@ -5,3 +5,13 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+#
+require 'faker'
+Warehouse.create([
+                     {name: Faker::Address.city},
+                     {name: Faker::Address.city}
+                 ])
+Product.create([
+                   {name: Faker::Lorem.word, price: Faker::Number.decimal(2)},
+                   {name: Faker::Lorem.word, price: Faker::Number.decimal(2)}
+               ])
