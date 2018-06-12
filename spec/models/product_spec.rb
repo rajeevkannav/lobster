@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe Product, type: :model do
 
-  #Validation Tests
+  # Validation Tests
   # ensure column name and price are present before saving
   describe '#name' do
     it { should validate_presence_of(:name) }

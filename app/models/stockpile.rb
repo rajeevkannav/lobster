@@ -1,13 +1,12 @@
 class Stockpile < ApplicationRecord
 
   # Validations
-  validates :available, :numericality => { :greater_than_or_equal_to => 0 }
-  validates :reserved, :numericality => { :greater_than_or_equal_to => 0 }
-  validates :shipped, :numericality => { :greater_than_or_equal_to => 0 }
+  validates :stock_on_hand, presence: true, :numericality => { :greater_than_or_equal_to => 0 }
+  validates :stock_on_reserve, presence: true, :numericality => { :greater_than_or_equal_to => 0 }
 
   # Associations
-  belongs_to :product
-  belongs_to :warehouse
+  belongs_to :product, inverse_of: :stockpiles
+  belongs_to :warehouse, inverse_of: :stockpiles
 
 
   def do_account(kind:, quantity:)

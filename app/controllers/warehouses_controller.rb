@@ -25,19 +25,19 @@ class WarehousesController < ApplicationController
 
   def destroy
     @warehouse.destroy
-    head :ok
+    head :no_content
   end
 
   def activity
-    @stockpile.do_account(kind: warehouse_activity_params[:kind], quantity: warehouse_activity_params[:quantity])
+    @stockpile.do_account(kind: warehouse_activity_params[:kind], quantity: warehouse_activity_params[:quantity].to_i)
     head :ok
   end
 
   def adjustments
      @to_warehouse_stockpile = @to_warehouse.stockpiles.find_or_create_by(product_id: warehouse_adjustments_params[:product_id])
      Stockpile.transaction do
-       @stockpile.do_account(kind: 'remove', quantity: warehouse_adjustments_params[:quantity])
-       @to_warehouse_stockpile.do_account(kind: 'add', quantity: warehouse_adjustments_params[:quantity])
+       @stockpile.do_account(kind: 'remove', quantity: warehouse_adjustments_params[:quantity].to_i)
+       @to_warehouse_stockpile.do_account(kind: 'add', quantity: warehouse_adjustments_params[:quantity].to_i)
      end
      head :ok
   end

@@ -22,9 +22,8 @@ ActiveRecord::Schema.define(version: 2018_06_11_081126) do
   create_table "stockpiles", force: :cascade do |t|
     t.integer "product_id"
     t.integer "warehouse_id"
-    t.integer "available", default: 0
-    t.integer "reserved", default: 0
-    t.integer "shipped", default: 0
+    t.integer "stock_on_hand", default: 0
+    t.integer "stock_on_reserve", default: 0
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["product_id"], name: "index_stockpiles_on_product_id"
